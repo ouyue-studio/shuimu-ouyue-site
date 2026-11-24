@@ -1,7 +1,8 @@
 (() => {
   const pause=document.querySelector('.motion-control');
+  const subject=pause.dataset.motionSubject||'船行';
   let paused=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const update=()=>{document.body.dataset.motion=paused?'paused':'playing';pause.textContent=paused?'继续船行':'暂停船行';pause.setAttribute('aria-pressed',String(paused));};
+  const update=()=>{document.body.dataset.motion=paused?'paused':'playing';pause.textContent=(paused?'继续':'暂停')+subject;pause.setAttribute('aria-pressed',String(paused));};
   update();pause.addEventListener('click',()=>{paused=!paused;update();});
   document.querySelectorAll('a[href]').forEach(a=>a.addEventListener('click',e=>{
     if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;

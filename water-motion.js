@@ -15,10 +15,10 @@
  const vs='attribute vec2 a;varying vec2 v;void main(){v=vec2(a.x*.5+.5,.5-a.y*.5);gl_Position=vec4(a,0.,1.);}';
  const fs=`precision highp float;
  uniform sampler2D painting;uniform sampler2D water;uniform vec2 crop;uniform vec2 origin;uniform vec2 direction;
- uniform float time;uniform float strength;uniform float aspect;varying vec2 v;
+ uniform float time;uniform float strength;uniform float aspect;uniform float opaque;varying vec2 v;
  void main(){
   vec2 uv=origin+v*crop;float mask=texture2D(water,uv).r;
-  if(mask<.002){gl_FragColor=vec4(0.);return;}
+  if(mask<.002&&opaque<.5){gl_FragColor=vec4(0.);return;}
   float depth=.35+.65*smoothstep(.42,1.,uv.y);
   vec2 p=vec2(uv.x*aspect,uv.y);
   float broad=sin(p.x*19.+p.y*27.-time*.43);
@@ -30,7 +30,7 @@
   float edge=mask*texture2D(water,uv+a).r*texture2D(water,uv+b).r;
   vec3 still=texture2D(painting,uv).rgb;
   vec3 moving=mix(texture2D(painting,uv+a*edge).rgb,texture2D(painting,uv+b*edge).rgb,blend);
-  gl_FragColor=vec4(mix(still,moving,edge),mask);
+  gl_FragColor=vec4(mix(still,moving,edge),max(mask,opaque));
  }`;
  function settings(){return {enabled:true,strength:2.6};}
  function polygon(c,points){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x*c.canvas.width,y*c.canvas.height):c.moveTo(x*c.canvas.width,y*c.canvas.height));c.closePath();c.fill();}
@@ -56,7 +56,7 @@
     this.buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,this.buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);const attr=gl.getAttribLocation(program,'a');gl.enableVertexAttribArray(attr);gl.vertexAttribPointer(attr,2,gl.FLOAT,false,0,0);
     const mask=document.createElement('canvas');mask.width=1024;mask.height=Math.round(1024*this.image.naturalHeight/this.image.naturalWidth);const c=mask.getContext('2d');c.fillStyle='black';c.fillRect(0,0,mask.width,mask.height);c.fillStyle='white';c.filter='blur(2px)';this.profile.polygons.forEach(p=>polygon(c,p));c.fillStyle='black';(this.profile.holes||[]).forEach(p=>polygon(c,p));
     this.textures=[this.texture(this.image,0),this.texture(mask,1)];gl.uniform1i(gl.getUniformLocation(program,'painting'),0);gl.uniform1i(gl.getUniformLocation(program,'water'),1);
-    this.u=Object.fromEntries(['crop','origin','time','strength','aspect','direction'].map(name=>[name,gl.getUniformLocation(program,name)]));gl.uniform1f(this.u.aspect,this.image.naturalWidth/this.image.naturalHeight);gl.uniform2fv(this.u.direction,this.profile.direction);
+    this.u=Object.fromEntries(['crop','origin','time','strength','aspect','direction','opaque'].map(name=>[name,gl.getUniformLocation(program,name)]));gl.uniform1f(this.u.aspect,this.image.naturalWidth/this.image.naturalHeight);gl.uniform2fv(this.u.direction,this.profile.direction);gl.uniform1f(this.u.opaque,this.profile.opaque?1:0);
     this.ready=true;this.canvas.dataset.waterReady='true';this.resize();
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(this.target);
     this.intersectionObserver=new IntersectionObserver(entries=>{this.visible=entries[0].isIntersecting;this.last=0;this.schedule();});this.intersectionObserver.observe(this.target);
@@ -90,6 +90,9 @@
   dispose(){if(!this.alive)return;this.alive=false;cancelAnimationFrame(this.raf);this.resizeObserver?.disconnect();this.intersectionObserver?.disconnect();this.motionObserver?.disconnect();document.removeEventListener('visibilitychange',this.change);this.textures?.forEach(t=>this.gl.deleteTexture(t));this.shaders?.forEach(s=>this.gl.deleteShader(s));if(this.buffer)this.gl.deleteBuffer(this.buffer);if(this.program)this.gl.deleteProgram(this.program);}
  }
  function mount(name){const profile={...profiles[name],name};const target=document.querySelector(profile.selector);if(!target)return;
+  // Render the complete opaque cover painting; its water mask only controls motion.
+  // This avoids transparent shoreline compositing halos on hardware WebGL drivers.
+  if(name==='cover')profile.opaque=true;
   let image=target;
   if(profile.source||target.tagName!=='IMG'){
    image=new Image();image.src=profile.source||new URL('assets/shanshui-banner.png',location.href);profile.background=target.tagName!=='IMG';
