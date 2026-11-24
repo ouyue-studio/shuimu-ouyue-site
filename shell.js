@@ -32,7 +32,7 @@
   dots.setAttribute('aria-valuenow',String(r.step));dots.setAttribute('aria-valuetext',r.title);
   prev.hidden=!r.previous;skip.hidden=!r.skip;skip.textContent=route==='cover.html'?'跳过封面':'跳过本篇';next.textContent=r.label;
   if(oldKind!==r.kind)sound.setChapter(r.kind);
-  document.title=r.title+'｜水木之间';
+  document.title=route==='cover.html'?'一程水木，满卷瓯越':r.title+'｜一程水木，满卷瓯越';
   if(mode){const url=new URL(location.href);if(route==='cover.html')url.searchParams.delete('page');else url.searchParams.set('page',route);history[mode+'State']({route},'',url);}
   gate();
  }
