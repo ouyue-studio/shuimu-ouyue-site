@@ -42,9 +42,9 @@
    const text=document.querySelector('.final-background')?.alt;
    if(art&&text){
     const reading=document.createElement('section');reading.className='mobile-final-reading';
-    const heading=document.createElement('h1');heading.textContent='生生瓯越';reading.append(heading);
+    const heading=document.createElement('h1');heading.textContent='满卷瓯越';reading.append(heading);
     const lead=document.createElement('p');lead.className='mobile-final-lead';lead.textContent='一江水路，至此有你。';reading.append(lead);
-    const body=document.createElement('p');body.textContent=text.replace(/^生生瓯越：一江水路，至此有你。/,'');reading.append(body);art.after(reading);
+    const body=document.createElement('p');body.textContent=text.replace(/^满卷瓯越：一江水路，至此有你。/,'');reading.append(body);art.after(reading);
    }
   }
  }

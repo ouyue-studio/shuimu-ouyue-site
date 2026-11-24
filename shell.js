@@ -10,7 +10,7 @@
   'chapter.html?chapter=sea':{step:5,title:'第三篇｜一江通海',kind:'sea',previous:'chapter.html?chapter=opera',next:'bridge/intro.html',skip:'bridge/intro.html',label:'下一程 · 泰顺廊桥',hint:'江流到山乡，先走近木拱廊桥的营造与生活'},
   'bridge/intro.html':{step:6,title:'第四篇｜山水成桥',kind:'present',previous:'chapter.html?chapter=sea',next:'chapter.html?chapter=present',skip:'chapter.html?chapter=present',label:'进入廊桥 · 今古相接',hint:'沿页签认识廊桥来处、编木结构、营造方法与乡村生活'},
   'chapter.html?chapter=present':{step:6,title:'第四篇｜今古相接',kind:'present',previous:'bridge/intro.html',next:'finale.html',skip:'finale.html',label:'收成我的诗笺',hint:'先见完整溪东桥；拖动右侧滑杆，桥身逐渐化为粒子'},
-  'finale.html':{step:7,title:'结章｜生生瓯越',kind:'finale',previous:'chapter.html?chapter=present',next:'cover.html',label:'回到卷首',hint:'你的原句，留在这一程。收下属于你的瓯越诗笺'}
+  'finale.html':{step:7,title:'结章｜满卷瓯越',kind:'finale',previous:'chapter.html?chapter=present',next:'cover.html',label:'回到卷首',hint:'你的原句，留在这一程。收下属于你的瓯越诗笺'}
  };
  let current=null,pending=null,gateObserver=null;
  const next=document.getElementById('routeNext'),prev=document.getElementById('routePrevious'),skip=document.getElementById('routeSkip'),toggle=document.getElementById('soundToggle');

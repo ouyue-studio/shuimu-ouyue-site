@@ -15,3 +15,20 @@
  @media(max-width:700px){.final-art .final-boat{top:78%;width:14%;height:10%}}
 
 .final-background{height:auto;aspect-ratio:1672/941}
+
+/* The new painting already includes its boat, stamps and collection frame. */
+@media(min-width:761px){
+ .final-stage{width:min(100%,177.6833dvh)}
+ .poetry{left:61.5%;top:44.6%;width:20%;height:30.5%;display:block;z-index:1}
+ .poetry .original-phrase,.poetry .marks,.poetry .afterword{display:none}
+ .poetry.has-phrase .original-phrase{position:absolute;inset:0 0 auto;height:46%;min-height:0;display:flex;flex-direction:column;justify-content:center;font-size:clamp(20px,2.65cqw,45px);line-height:1.4;letter-spacing:.08em}
+ .poetry.has-phrase .marks{display:flex;position:absolute;top:47%;width:100%;height:22%;min-height:0;gap:clamp(14px,2.6cqw,44px)}
+ .poetry .mark{font-size:clamp(12px,1.2cqw,20px);padding:4px;line-height:1.12}
+ .poetry #savePoem{position:absolute;left:6%;top:83%;width:88%;height:17%;padding:0;border:0;box-shadow:none;background:transparent;color:transparent;border-radius:10px}
+ .poetry #savePoem:hover:not(:disabled){background:#a8793b15}
+ .poetry #savePoem:disabled{opacity:1}
+ .poetry #returnType{position:absolute;top:103%;left:-5%;width:110%;font-size:clamp(11px,.85cqw,15px)}
+ .poetry #saveStatus{position:absolute;top:113%;left:-15%;width:130%;font-size:clamp(11px,.8cqw,14px)}
+ .poem-clear{clip-path:inset(44.6% 18.5% 34.5% 61.5%)}
+}
+@media(max-width:760px){.poem-clear{display:none}}

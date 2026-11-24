@@ -10,7 +10,7 @@
   banner:{selector:'.hero img',polygons:[[[0,.79],[.29,.73],[.34,.68],[.36,.612],[.64,.612],[.69,.65],[.82,.68],[.91,.70],[.91,.75],[.85,.80],[.78,.86],[.77,.90],[.90,.96],[1,.99],[1,1],[0,1]]],direction:[1,.05]},
   bridge:{selector:'.hero img',polygons:[[[.588,.626],[.63,.622],[.65,.675],[.617,.738],[.66,.80],[.65,.86],[.76,.92],[.84,.98],[.85,1],[.55,1],[.51,.95],[.46,.91],[.42,.90],[.40,.85],[.45,.81],[.43,.78],[.50,.75],[.54,.70],[.58,.68]]],holes:[[[.50,.795],[.54,.78],[.58,.79],[.615,.82],[.60,.854],[.55,.854],[.52,.84]]],direction:[-.18,1]},
   opera:{selector:'.stage-bg',polygons:[[[0,.659],[.035,.648],[.062,.655],[.082,.686],[.076,.713],[.05,.747],[.028,.77],[0,.785]],[[.923,.665],[.97,.661],[1,.66],[1,.782],[.975,.767],[.948,.745],[.922,.719]]],direction:[.12,1],strength:.8},
-  finale:{selector:'.final-background',source:new URL('assets/finale-clean.png',assetRoot).href,container:'.final-art',before:'.final-boat',polygons:[[[.30,.885],[.39,.847],[.53,.848],[.68,.853],[.82,.815],[.91,.755],[.96,.74],[.963,.887],[.995,.917],[.97,.967],[.93,1],[.29,1],[.30,.94]]],direction:[1,.12]}
+  finale:{selector:'.final-background',container:'.final-art',before:'.poem-clear',polygons:[[[.30,.885],[.39,.847],[.53,.848],[.68,.853],[.82,.815],[.91,.755],[.96,.74],[.963,.887],[.995,.917],[.97,.967],[.93,1],[.29,1],[.30,.94]]],direction:[1,.12]}
  };
  const vs='attribute vec2 a;varying vec2 v;void main(){v=vec2(a.x*.5+.5,.5-a.y*.5);gl_Position=vec4(a,0.,1.);}';
  const fs=`precision highp float;
@@ -90,9 +90,9 @@
   dispose(){if(!this.alive)return;this.alive=false;cancelAnimationFrame(this.raf);this.resizeObserver?.disconnect();this.intersectionObserver?.disconnect();this.motionObserver?.disconnect();document.removeEventListener('visibilitychange',this.change);this.textures?.forEach(t=>this.gl.deleteTexture(t));this.shaders?.forEach(s=>this.gl.deleteShader(s));if(this.buffer)this.gl.deleteBuffer(this.buffer);if(this.program)this.gl.deleteProgram(this.program);}
  }
  function mount(name){const profile={...profiles[name],name};const target=document.querySelector(profile.selector);if(!target)return;
-  // Render the complete opaque cover painting; its water mask only controls motion.
+  // Render complete opaque paintings; their water masks only control motion.
   // This avoids transparent shoreline compositing halos on hardware WebGL drivers.
-  if(name==='cover')profile.opaque=true;
+  if(name==='cover'||name==='workshop'||name==='finale')profile.opaque=true;
   let image=target;
   if(profile.source||target.tagName!=='IMG'){
    image=new Image();image.src=profile.source||new URL('assets/shanshui-banner.png',location.href);profile.background=target.tagName!=='IMG';
